@@ -1,0 +1,13 @@
+server:
+  port: 6798
+  servlet:
+    context-path: /dbExport
+spring:
+  application:
+    name: db-export
+
+word:
+  model:
+    export: D://export.docx
+    import: classpath:docx/import.docx
+    sub-model: classpath:docx/sub_model.docx
