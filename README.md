@@ -14,3 +14,7 @@
 
 ## Open Source Licenses
 #### [POI-TL](http://deepoove.com/poi-tl)
+
+## 修改了显示内容，增加主键列
+#### 修改时间 2019年8月6日 12点17分
+#### word内能够显示是否为主键

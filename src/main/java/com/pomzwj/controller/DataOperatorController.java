@@ -32,7 +32,7 @@ public class DataOperatorController {
     ResponseMessage getData(String dbKind, DbBaseInfo info) {
         ResponseMessage responseMessage = new ResponseMessage();
         try {
-            List<DbTable> tableMessage = dataOperatorService.getTablename(dbKind,info);
+            List<DbTable> tableMessage = dataOperatorService.getTableName(dbKind,info);
             poitlOperatorService.makeDoc(tableMessage);
             responseMessage.setMessage("生成文档成功!!!");
         }catch (Exception e){

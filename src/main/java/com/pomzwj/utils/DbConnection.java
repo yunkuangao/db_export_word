@@ -9,13 +9,13 @@ import java.sql.Statement;
  * 类说明:JDBC连接
  *
  * @author zhaowenjie<1513041820@qq.com>
+ * @author yuntian 317526763@qq.com
  * @date 2018/10/30/0030.
  */
-public class DbConnnecttion {
+public class DbConnection {
     public static Connection getConn(String jdbcUrl, String userName, String password, String driverClassName) throws Exception {
         Class.forName(driverClassName);
-        Connection connection = DriverManager.getConnection(jdbcUrl, userName, password);
-        return connection;
+        return DriverManager.getConnection(jdbcUrl, userName, password);
     }
 
     public static void closeRs(ResultSet rs) throws Exception {

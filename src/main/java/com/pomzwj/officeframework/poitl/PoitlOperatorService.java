@@ -9,12 +9,9 @@ import com.pomzwj.domain.SegmentData;
 import com.pomzwj.domain.TempData;
 import com.pomzwj.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.util.*;
 
@@ -22,7 +19,8 @@ import java.util.*;
 /**
  * 类说明:POI-TL操作服务
  *
- * @author zhaowenjie<1513041820@qq.com>
+ * @author zhaowenjie<1 5 1 3 0 4 1 8 2 0 @ qq.com>
+ * @author yuntian 317526763@qq.com
  * @date 2018/10/29/0029.
  */
 @Service
@@ -36,13 +34,14 @@ public class PoitlOperatorService {
 
     /**
      * 生成word
-     * @param tableMessage
-     * @throws Exception
+     *
+     * @param tableMessage 表格内容
+     * @throws Exception 异常
      */
     public void makeDoc(List<DbTable> tableMessage) throws Exception {
 
 
-        List<TempData>tempDataList=new ArrayList<>();
+        List<TempData> tempDataList = new ArrayList<>();
         for (DbTable dbTable : tableMessage) {
             List<Map> data = (List<Map>) dbTable.getTabsColumn();
             TempData tempData = new TempData();
@@ -50,24 +49,24 @@ public class PoitlOperatorService {
             tempData.setTableName(dbTable.getTableName());
 
             List<RowRenderData> rowRenderDataList = new ArrayList<>();
-            for (int i = 0; i < data.size(); i++) {
+            for (Map map : data) {
 
-                Map map = data.get(i);
                 //列名
-                String column_name = StringUtils.getValue(map.get("COLUMN_NAME"));
+                String columnName = StringUtils.getValue(map.get("COLUMN_NAME"));
                 //数据类型
-                String data_type = StringUtils.getValue(map.get("DATA_TYPE"));
+                String dataType = StringUtils.getValue(map.get("DATA_TYPE"));
                 //数据长度
-                String data_length = StringUtils.getValue(map.get("DATA_LENGTH"));
-
+                String dataLength = StringUtils.getValue(map.get("DATA_LENGTH"));
                 //是否可空
-                String null_able = StringUtils.getValue(map.get("NULL_ABLE"));
+                String nullAble = StringUtils.getValue(map.get("NULL_ABLE"));
+                //是否主键
+                String pk = StringUtils.getValue(map.get("PK"));
                 //数据缺省值
-                String data_default = StringUtils.getValue(map.get("DATA_DEFAULT"));
+                String dataDefault = StringUtils.getValue(map.get("DATA_DEFAULT"));
                 //字段注释
                 String comments = StringUtils.getValue(map.get("COMMENTS"));
 
-                RowRenderData labor = RowRenderData.build( column_name, data_type,data_length,null_able,data_default,comments);
+                RowRenderData labor = RowRenderData.build(columnName, dataType, dataLength, nullAble, pk, dataDefault, comments);
 
                 rowRenderDataList.add(labor);
             }
@@ -75,19 +74,18 @@ public class PoitlOperatorService {
             tempDataList.add(tempData);
 
         }
-        Map<String,Object>tempMap = new HashMap<>();
-        List segmentDataList = new ArrayList();
-        for(int i=0;i<tempDataList.size();i++){
-            TempData tempData = tempDataList.get(i);
-            RowRenderData header = RowRenderData.build("列名", "数据类型", "数据长度", "是否为空", "默认值", "备注");
+        Map<String, Object> tempMap = new HashMap<>();
+        List<SegmentData> segmentDataList = new ArrayList<SegmentData>();
+        for (TempData tempData : tempDataList) {
+            RowRenderData header = RowRenderData.build("列名", "数据类型", "数据长度", "是否为空", "是否主键", "默认值", "备注");
             SegmentData segmentData = new SegmentData();
-            segmentData.setTable(new MiniTableRenderData(header,tempData.getData()));
+            segmentData.setTable(new MiniTableRenderData(header, tempData.getData()));
             segmentData.setTableName(tempData.getTableName());
             segmentData.setTableComments(tempData.getTableComment());
             segmentDataList.add(segmentData);
         }
         //Resource resource = new ClassPathResource(subModelWord);
-        tempMap.put("seg",new DocxRenderData(ResourceUtils.getFile(subModelWord), segmentDataList));
+        tempMap.put("seg", new DocxRenderData(ResourceUtils.getFile(subModelWord), segmentDataList));
         //Resource resource2 = new ClassPathResource(importWord);
         /*1.根据模板生成文档*/
         XWPFTemplate template = XWPFTemplate.compile(ResourceUtils.getFile(importWord)).render(tempMap);
