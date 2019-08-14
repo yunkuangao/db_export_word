@@ -1,0 +1,40 @@
+package com.pomzwj.service.impl;
+
+import com.pomzwj.domain.OptionalPropertiesEnv;
+import com.pomzwj.service.IOptionalService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+/**
+ * @ClassName OptionalServiceImpl
+ * @Description TODO
+ * @Author yuntian 317526763@qq.com
+ * @Date 2019/8/13 09:54
+ * @Version 1.0
+ **/
+@Service
+public class OptionalServiceImpl implements IOptionalService {
+    @Autowired
+    private OptionalPropertiesEnv env;
+
+    @Override
+    public Map<String, Object> getOptional() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        List<String> param = Arrays.asList(env.getParam().split(","));
+        List<String> param_cn = Arrays.asList(env.getParam_cn().split(","));
+        for (int i = 0; i < param.size(); i++) {
+            map.put(param.get(i), param_cn.get(i));
+        }
+        return map;
+    }
+
+    @Override
+    public List<String> getFiled() {
+        Set<String> key =  getOptional().keySet();
+        return new ArrayList<>(key);
+    }
+}

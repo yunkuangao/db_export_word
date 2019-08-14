@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 80
   servlet:
     context-path: /
 spring:
@@ -8,6 +8,11 @@ spring:
 
 word:
   model:
-    export: D://export.docx
+    export: D:\\export.docx
     import: classpath:docx/import.docx
     sub-model: classpath:docx/sub_model.docx
+
+# 配置打印参数
+optional:
+  param: COLUMN_NAME,DATA_TYPE,DATA_LENGTH,NULL_ABLE,DATA_DEFAULT,COMMENTS,PK
+  param_cn: 列名,数据类型,长度,可空,默认值,注释,主键

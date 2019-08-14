@@ -5,17 +5,46 @@
     <title>数据库表结构导出生成WORD文档</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap-select.css">
     <script src="../js/jquery-3.3.1.js"></script>
     <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <script src="../bootstrap/js/bootstrao-select.js"></script>
 </head>
 <script type="text/javascript">
+    $(function(){
+        $.ajax({
+            url: "/getOptional",
+            dataType: "json",
+            type: "get",
+            success: function (data) {
+                console.log(data);
+                $("#select_ido_optional option").remove();
+                for (var key in data) {
+                    $("#o_optional").append("<option value='" + key + "' selected>" + data[key] + "</option>");
+                    $("#m_optional").append("<option value='" + key + "' selected>" + data[key] + "</option>");
+                    $("#s_optional").append("<option value='" + key + "' selected>" + data[key] + "</option>");
+                }
+            }, error: function (data) {
+                $('#messageText').text("未知错误");
+            }
+        })
+    });
+
     function o_excute() {
         $('#messageText').text("正在努力生成中......");
         $('#myModal').modal('show');
         $.ajax({
             url: "/makeWord",
             type: "post",
-            data: {dbKind:'oracle',ip: $('#o_ip').val(),port:$('#o_port').val(),dbName:$('#o_dbName').val(), userName:$('#o_userName').val(), password:$('#o_password').val()},
+            data: {
+                dbKind: 'oracle',
+                ip: $('#o_ip').val(),
+                port: $('#o_port').val(),
+                dbName: $('#o_dbName').val(),
+                userName: $('#o_userName').val(),
+                password: $('#o_password').val(),
+                optional: $('#o_optional').val().toString()
+            },
             success: function (data) {
                 $('#messageText').text(data.message);
             }, error: function (data) {
@@ -23,13 +52,22 @@
             }
         });
     }
+
     function m_excute() {
         $('#messageText').text("正在努力生成中......");
         $('#myModal').modal('show');
         $.ajax({
             url: "/makeWord",
             type: "post",
-            data: {dbKind:'mysql',ip: $('#m_ip').val(),port:$('#m_port').val(),dbName:$('#m_dbName').val(), userName:$('#m_userName').val(), password:$('#m_password').val()},
+            data: {
+                dbKind: 'mysql',
+                ip: $('#m_ip').val(),
+                port: $('#m_port').val(),
+                dbName: $('#m_dbName').val(),
+                userName: $('#m_userName').val(),
+                password: $('#m_password').val(),
+                optional: $('#o_optional').val().toString()
+            },
             success: function (data) {
                 $('#messageText').text(data.message);
             }, error: function (data) {
@@ -37,13 +75,22 @@
             }
         });
     }
+
     function s_excute() {
         $('#messageText').text("正在努力生成中......");
         $('#myModal').modal('show');
         $.ajax({
             url: "/makeWord",
             type: "post",
-            data: {dbKind:'sqlserver',ip: $('#s_ip').val(),port:$('#s_port').val(),dbName:$('#s_dbName').val(), userName:$('#s_userName').val(), password:$('#s_password').val()},
+            data: {
+                dbKind: 'sqlserver',
+                ip: $('#s_ip').val(),
+                port: $('#s_port').val(),
+                dbName: $('#s_dbName').val(),
+                userName: $('#s_userName').val(),
+                password: $('#s_password').val(),
+                optional: $('#o_optional').val().toString()
+            },
             success: function (data) {
                 $('#messageText').text(data.message);
             }, error: function (data) {
@@ -90,7 +137,14 @@
                             <label for="o_password">password</label>
                             <input type="text" class="form-control" id="o_password" placeholder="password">
                         </div>
-
+                        <div class="form-group">
+                            <!-- 多选框参考链接 -->
+                            <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
+                            <label for="o_optional">optional</label>
+                            <select class="selectpicker form-control" id="o_optional" multiple>
+                                <option></option>
+                            </select>
+                        </div>
                         <p><a class="btn btn-primary btn-lg" href="javascript:o_excute();"
                               role="button">生成文档</a></p>
                         <p style="color: red">生成的文档在D盘下的export.docx</p>
@@ -135,7 +189,14 @@
                             <label for="m_password">password</label>
                             <input type="text" class="form-control" id="m_password" placeholder="password">
                         </div>
-
+                        <div class="form-group">
+                            <!-- 多选框参考链接 -->
+                            <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
+                            <label for="m_optional">optional</label>
+                            <select class="selectpicker form-control" id="m_optional" multiple>
+                                <option></option>
+                            </select>
+                        </div>
                         <p><a class="btn btn-primary btn-lg" href="javascript:m_excute();" role="button">生成文档</a>
                         </p>
                         <p style="color: red">生成的文档在D盘下的export.docx</p>
@@ -178,7 +239,14 @@
                             <label for="s_password">password</label>
                             <input type="text" class="form-control" id="s_password" placeholder="password">
                         </div>
-
+                        <div class="form-group">
+                            <!-- 多选框参考链接 -->
+                            <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
+                            <label for="s_optional">optional</label>
+                            <select class="selectpicker form-control" id="s_optional" multiple>
+                                <option></option>
+                            </select>
+                        </div>
                         <p><a class="btn btn-primary btn-lg" href="javascript:s_excute();" role="button">生成文档</a>
                         </p>
                         <p style="color: red">生成的文档在D盘下的export.docx</p>
