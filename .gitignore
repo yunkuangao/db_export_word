@@ -31,3 +31,4 @@ target/test-classes/
 /.idea/
 /classes/
 /src/test/
+/src/main/resources/rebel.xml
