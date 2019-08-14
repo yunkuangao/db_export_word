@@ -8,7 +8,7 @@ import java.sql.Statement;
 /**
  * 类说明:JDBC连接
  *
- * @author zhaowenjie<1513041820@qq.com>
+ * @author yuntian 317526763@qq.com
  * @author yuntian 317526763@qq.com
  * @date 2018/10/30/0030.
  */

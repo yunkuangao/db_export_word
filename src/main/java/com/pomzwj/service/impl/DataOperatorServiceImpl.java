@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 类说明:数据操作类
@@ -31,7 +28,7 @@ public class DataOperatorServiceImpl implements IDataOperatorService {
         List<DbTable> tableList = new ArrayList<>();
         Connection connection = DbConnection.getConn(DbExportConstants.getJdbcUrl(dbKind, info.getIp(), info.getPort(), info.getDbName()), info.getUserName(), info.getPassword(), DbExportConstants.getDriverClassName(dbKind));
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(DbExportConstants.getTableNameSQL(dbKind, info.getDbName()));
+        ResultSet resultSet = statement.executeQuery(DbExportConstants.getTableNameSQL(dbKind, info.getDbName(), info));
         while (resultSet.next()) {
             DbTable dbTable = new DbTable();
             String tableName = resultSet.getString("TABLE_NAME");
@@ -40,7 +37,6 @@ public class DataOperatorServiceImpl implements IDataOperatorService {
             dbTable.setTableName(tableName);
             tableList.add(dbTable);
         }
-
         for (DbTable dbTable : tableList) {
             List<Map> tabsColumn = this.getTabsColumn(dbKind, dbTable.getTableName(), connection);
             dbTable.setTabsColumn(tabsColumn);

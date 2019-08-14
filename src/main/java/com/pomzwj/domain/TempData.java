@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 类说明:Temp缓冲数据
  *
- * @author zhaowenjie<1513041820@qq.com>
+ * @author yuntian 317526763@qq.com
  * @date 2018/10/29/0029.
  */
 public class TempData implements Serializable {

@@ -2,13 +2,15 @@ package com.pomzwj;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * @author zhaowenjie<1513041820@qq.com>
+ * @author yuntian 317526763@qq.com
  */
+@EnableConfigurationProperties
 @SpringBootApplication
 @Controller
 public class DatabaseExportApplication {
