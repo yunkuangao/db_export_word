@@ -113,7 +113,7 @@
                             <addClasspath>true</addClasspath>
                             <!--指定classpath的前缀-->
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.pomzwj.DatabaseExportApplication</mainClass>
+                            <mainClass>com.dbexport.DatabaseExportApplication</mainClass>
                             <useUniqueVersions>false</useUniqueVersions>
                         </manifest>
                     </archive>

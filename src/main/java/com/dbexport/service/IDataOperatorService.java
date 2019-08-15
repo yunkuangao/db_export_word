@@ -1,9 +1,8 @@
-package com.pomzwj.service;
+package com.dbexport.service;
 
-import com.pomzwj.domain.DbBaseInfo;
-import com.pomzwj.domain.DbTable;
+import com.dbexport.domain.DbBaseInfo;
+import com.dbexport.domain.DbTable;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 

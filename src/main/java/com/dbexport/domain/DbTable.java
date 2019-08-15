@@ -1,4 +1,4 @@
-package com.pomzwj.domain;
+package com.dbexport.domain;
 
 import lombok.Data;
 

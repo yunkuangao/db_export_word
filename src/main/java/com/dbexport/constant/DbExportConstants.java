@@ -1,8 +1,4 @@
-package com.pomzwj.constant;
-
-import com.pomzwj.domain.DbBaseInfo;
-
-import java.util.Arrays;
+package com.dbexport.constant;
 
 /**
  * 类说明:常用字段

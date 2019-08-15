@@ -1,17 +1,16 @@
-package com.pomzwj.service.impl;
+package com.dbexport.service.impl;
 
-import com.pomzwj.constant.DbExportConstants;
-import com.pomzwj.domain.DbBaseInfo;
-import com.pomzwj.domain.DbTable;
-import com.pomzwj.service.IDataOperatorService;
-import com.pomzwj.utils.DbConnection;
+import com.dbexport.constant.DbExportConstants;
+import com.dbexport.domain.DbBaseInfo;
+import com.dbexport.domain.DbTable;
+import com.dbexport.service.IDataOperatorService;
+import com.dbexport.utils.DbConnection;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 类说明:数据操作类

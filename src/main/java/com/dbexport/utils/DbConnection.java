@@ -1,4 +1,4 @@
-package com.pomzwj.utils;
+package com.dbexport.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

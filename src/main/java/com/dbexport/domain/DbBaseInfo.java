@@ -1,10 +1,9 @@
-package com.pomzwj.domain;
+package com.dbexport.domain;
 
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 类说明:数据库基础信息
