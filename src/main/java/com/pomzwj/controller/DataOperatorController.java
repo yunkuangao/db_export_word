@@ -6,6 +6,7 @@ import com.pomzwj.domain.DbTable;
 import com.pomzwj.domain.ResponseMessage;
 import com.pomzwj.officeframework.poitl.PoitlOperatorService;
 import com.pomzwj.service.IDataOperatorService;
+import com.pomzwj.utils.DbConnection;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,7 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 类说明:
@@ -43,10 +45,19 @@ public class DataOperatorController {
 
     @RequestMapping(value = "/makeWord")
     public @ResponseBody
-    ResponseMessage getData(String dbKind, DbBaseInfo info, byte[] dataArray, HttpServletRequest request, HttpServletResponse response) throws IOException, InterruptedException {
+    ResponseMessage getData(String dbKind, DbBaseInfo info) throws IOException, InterruptedException {
         ResponseMessage responseMessage = new ResponseMessage();
         try {
             List<DbTable> tableMessage = dataOperatorService.getTableName(dbKind,info);
+            tableMessage = tableMessage
+                    .stream()
+                    .parallel()
+                    .filter(lt -> info.getTable().contains(lt.getTableName()))
+                    .collect(Collectors.toList());
+            for (DbTable dbTable : tableMessage) {
+                List<Map> tabsColumn = dataOperatorService.getTabsColumn(dbKind, info, dbTable.getTableName());
+                dbTable.setTabsColumn(tabsColumn);
+            }
             poitlOperatorService.makeDoc(tableMessage,info);
             responseMessage.setMessage("生成文档成功!!!");
         }catch (Exception e){

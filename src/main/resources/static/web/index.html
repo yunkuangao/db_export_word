@@ -27,69 +27,74 @@
             }, error: function (data) {
                 $('#messageText').text("未知错误");
             }
-        })
+        });
+
+        $("input").change(function () {
+            var db = $(this).attr("id").substring(0,1);
+            $.ajax({
+                url: "/getTable",
+                dataType: "json",
+                type: "post",
+                data: {
+                    dbKind: transTo(db),
+                    ip: $("#"+db+"_ip").val(),
+                    port: $("#"+db+"_port").val(),
+                    dbName: $("#"+db+"_dbName").val(),
+                    userName: $("#"+db+"_userName").val(),
+                    password: $("#"+db+"_password").val()
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#"+db+"_table option").remove();
+                    for (var key in data) {
+                        $("#"+db+"_table").append("<option value='" + key + "' selected>" + data[key] + "</option>");
+                    }
+                    $("#"+db+"_table").selectpicker('render');
+                    $("#"+db+"_table").selectpicker('refresh');
+                    $("#"+db+"_table").selectpicker();
+                }, error: function (data) {
+                    $('#messageText').text("未知错误");
+                }
+            });
+        });
     });
 
-    function o_excute() {
-        $('#messageText').text("正在努力生成中......");
-        $('#myModal').modal('show');
-        $.ajax({
-            url: "/makeWord",
-            type: "post",
-            data: {
-                dbKind: 'oracle',
-                ip: $('#o_ip').val(),
-                port: $('#o_port').val(),
-                dbName: $('#o_dbName').val(),
-                userName: $('#o_userName').val(),
-                password: $('#o_password').val(),
-                optional: $('#o_optional').val().toString()
-            },
-            success: function (data) {
-                $('#messageText').text(data.message);
-            }, error: function (data) {
-                $('#messageText').text("未知错误");
-            }
-        });
+    function trans(dbKind){
+        var db;
+        switch(dbKind){
+            case "mysql":db = "m";break;
+            case "oracle": db = "o";break;
+            case "sqlserver": db = "s";
+        }
+        return db;
     }
 
-    function m_excute() {
-        $('#messageText').text("正在努力生成中......");
-        $('#myModal').modal('show');
-        $.ajax({
-            url: "/makeWord",
-            type: "post",
-            data: {
-                dbKind: 'mysql',
-                ip: $('#m_ip').val(),
-                port: $('#m_port').val(),
-                dbName: $('#m_dbName').val(),
-                userName: $('#m_userName').val(),
-                password: $('#m_password').val(),
-                optional: $('#o_optional').val().toString()
-            },
-            success: function (data) {
-                $('#messageText').text(data.message);
-            }, error: function (data) {
-                $('#messageText').text("未知错误");
-            }
-        });
+    function transTo(db){
+        var dbKind;
+        switch(db){
+            case "m":dbKind = "mysql";break;
+            case "o": dbKind = "oracle";break;
+            case "s": dbKind = "sqlserver";
+        }
+        return dbKind;
     }
 
-    function s_excute() {
+    function excute(dbKind) {
         $('#messageText').text("正在努力生成中......");
         $('#myModal').modal('show');
+        var db = trans(dbKind);
         $.ajax({
             url: "/makeWord",
             type: "post",
             data: {
-                dbKind: 'sqlserver',
-                ip: $('#s_ip').val(),
-                port: $('#s_port').val(),
-                dbName: $('#s_dbName').val(),
-                userName: $('#s_userName').val(),
-                password: $('#s_password').val(),
-                optional: $('#o_optional').val().toString()
+                dbKind: dbKind,
+                ip: $("#"+db+"_ip").val(),
+                port: $("#"+db+"_port").val(),
+                dbName: $("#"+db+"_dbName").val(),
+                userName: $("#"+db+"_userName").val(),
+                password: $("#"+db+"_password").val(),
+                optional: $("#"+db+"_optional").val().toString(),
+                table: $("#"+db+"_table").val().toString()
             },
             success: function (data) {
                 $('#messageText').text(data.message);
@@ -141,11 +146,19 @@
                             <!-- 多选框参考链接 -->
                             <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
                             <label for="o_optional">optional</label>
-                            <select class="selectpicker form-control" id="o_optional" multiple>
+                            <select class="selectpicker form-control" id="o_optional" data-selected-text-format="count > 5" multiple>
                                 <option></option>
                             </select>
                         </div>
-                        <p><a class="btn btn-primary btn-lg" href="javascript:o_excute();"
+                        <div class="form-group">
+                            <!-- 多选框参考链接 -->
+                            <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
+                            <label for="o_table">table</label>
+                            <select class="selectpicker form-control" id="o_table" data-selected-text-format="count > 5" multiple>
+                                <option></option>
+                            </select>
+                        </div>
+                        <p><a class="btn btn-primary btn-lg" href="javascript:excute('oracle');"
                               role="button">生成文档</a></p>
                         <p style="color: red">生成的文档在D盘下的export.docx</p>
                     </form>
@@ -197,7 +210,15 @@
                                 <option></option>
                             </select>
                         </div>
-                        <p><a class="btn btn-primary btn-lg" href="javascript:m_excute();" role="button">生成文档</a>
+                        <div class="form-group">
+                            <!-- 多选框参考链接 -->
+                            <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
+                            <label for="m_table">table</label>
+                            <select class="selectpicker form-control" id="m_table" data-selected-text-format="count > 5" multiple>
+                                <option></option>
+                            </select>
+                        </div>
+                        <p><a class="btn btn-primary btn-lg" href="javascript:excute('mysql');" role="button">生成文档</a>
                         </p>
                         <p style="color: red">生成的文档在D盘下的export.docx</p>
                     </form>
@@ -247,7 +268,15 @@
                                 <option></option>
                             </select>
                         </div>
-                        <p><a class="btn btn-primary btn-lg" href="javascript:s_excute();" role="button">生成文档</a>
+                        <div class="form-group">
+                            <!-- 多选框参考链接 -->
+                            <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
+                            <label for="s_table">table</label>
+                            <select class="selectpicker form-control" id="s_table" data-selected-text-format="count > 5" multiple>
+                                <option></option>
+                            </select>
+                        </div>
+                        <p><a class="btn btn-primary btn-lg" href="javascript:excute('sqlserver');" role="button">生成文档</a>
                         </p>
                         <p style="color: red">生成的文档在D盘下的export.docx</p>
                     </form>

@@ -46,7 +46,7 @@ public class PoitlOperatorService {
      * @throws Exception 异常
      */
     public void makeDoc(List<DbTable> tableMessage, DbBaseInfo info) throws Exception {
-        String[] key = info.getOptional();
+        List<String> key = info.getOptional();
 
         List<TempData> tempDataList = new ArrayList<>();
         for (DbTable dbTable : tableMessage) {
@@ -61,7 +61,7 @@ public class PoitlOperatorService {
                 for(String str : key){
                     currentList.add(StringUtils.getValue(map.get(str)));
                 }
-                RowRenderData labor = RowRenderData.build(currentList.stream().toArray(String[]::new));
+                RowRenderData labor = RowRenderData.build(currentList.toArray(new String[0]));
                 rowRenderDataList.add(labor);
             }
             tempData.setData(rowRenderDataList);
@@ -72,7 +72,7 @@ public class PoitlOperatorService {
         List<SegmentData> segmentDataList = new ArrayList<>();
         Map<String,String> map = env.getMap();
         for (TempData tempData : tempDataList) {
-            RowRenderData header = RowRenderData.build(Arrays.stream(key).map(map::get).toArray(String[]::new));
+            RowRenderData header = RowRenderData.build(key.stream().map(map::get).toArray(String[]::new));
             SegmentData segmentData = new SegmentData();
             segmentData.setTable(new MiniTableRenderData(header, tempData.getData()));
             segmentData.setTableName(tempData.getTableName());
