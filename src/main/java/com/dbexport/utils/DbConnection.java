@@ -9,7 +9,6 @@ import java.sql.Statement;
  * 类说明:JDBC连接
  *
  * @author yuntian 317526763@qq.com
- * @author yuntian 317526763@qq.com
  * @date 2018/10/30/0030.
  */
 public class DbConnection {

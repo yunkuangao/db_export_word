@@ -23,17 +23,17 @@ public class OptionalPropertiesEnv {
     private String param;
     private String param_cn;
 
-    private Map<String,String> map;
+    private Map<String, String> map;
 
     public Map<String, String> getMap() {
-        if(map==null){
+        if (map == null) {
             map = new HashMap<>(16);
         }
-        if(map.size()==0){
+        if (map.size() == 0) {
             String[] pa = param.split(",");
             String[] pa_cn = param_cn.split(",");
-            for(int i =0;i<param.length();i++){
-                map.put(pa[i],pa_cn[i]);
+            for (int i = 0, j = pa.length; i < j; ++i) {
+                map.put(pa[i], pa_cn[i]);
             }
         }
         return map;

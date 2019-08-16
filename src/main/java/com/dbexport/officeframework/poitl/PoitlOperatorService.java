@@ -18,7 +18,6 @@ import java.util.*;
 /**
  * 类说明:POI-TL操作服务
  *
- * @author zhaowenjie<1 5 1 3 0 4 1 8 2 0 @ qq.com>
  * @author yuntian 317526763@qq.com
  * @date 2018/10/29/0029.
  */
@@ -41,7 +40,6 @@ public class PoitlOperatorService {
      */
     public void makeDoc(List<DbTable> tableMessage, DbBaseInfo info) throws Exception {
         List<String> key = info.getOptional();
-
         List<TempData> tempDataList = new ArrayList<>();
         for (DbTable dbTable : tableMessage) {
             List<Map> data = dbTable.getTabsColumn();

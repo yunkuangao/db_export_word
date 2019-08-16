@@ -5,17 +5,18 @@ import com.dbexport.domain.DbBaseInfo;
 import com.dbexport.domain.DbTable;
 import com.dbexport.service.IDataOperatorService;
 import com.dbexport.utils.DbConnection;
+import com.dbexport.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 类说明:数据操作类
  *
- * @author zhaowenjie<1 5 1 3 0 4 1 8 2 0 @ qq.com>
  * @author yuntian 317526763@qq.com
  * @date 2018/10/29/0029.
  */
@@ -44,6 +45,7 @@ public class DataOperatorServiceImpl implements IDataOperatorService {
     @Override
     public List<Map> getTabsColumn(String dbKind, DbBaseInfo info, String tableName) throws Exception {
         List<Map> list = new ArrayList<>();
+        List<String> key = info.getOptional();
         Connection connection = DbConnection.getConn(DbExportConstants.getJdbcUrl(dbKind, info.getIp(), info.getPort(), info.getDbName()), info.getUserName(), info.getPassword(), DbExportConstants.getDriverClassName(dbKind));
 
         Statement statement = connection.createStatement();
@@ -52,16 +54,26 @@ public class DataOperatorServiceImpl implements IDataOperatorService {
 
         while (resultSet.next()) {
             Map<String, String> colDataMap = new HashMap<>(16);
-            colDataMap.put("COLUMN_NAME", resultSet.getString("COLUMN_NAME"));
-            colDataMap.put("DATA_TYPE", resultSet.getString("DATA_TYPE"));
-            colDataMap.put("DATA_LENGTH", resultSet.getString("DATA_LENGTH"));
-            colDataMap.put("NULL_ABLE", resultSet.getString("NULLABLE"));
-            colDataMap.put("DATA_DEFAULT", resultSet.getString("DATA_DEFAULT"));
-            colDataMap.put("COMMENTS", resultSet.getString("COMMENTS"));
-            colDataMap.put("PK", resultSet.getString("PK"));
+            for(String str : key){
+                colDataMap.put(str, resultSet.getString(str));
+            }
             list.add(colDataMap);
         }
         DbConnection.closeConn(connection);
         return list;
+    }
+
+    @Override
+    public List<DbTable> getTabsAllColumn(List<DbTable> tableMessage, String dbKind, DbBaseInfo info) throws Exception {
+        tableMessage = tableMessage
+                .stream()
+                .parallel()
+                .filter(lt -> info.getTable().contains(lt.getTableName()))
+                .collect(Collectors.toList());
+        for (DbTable dbTable : tableMessage) {
+            List<Map> tabsColumn = getTabsColumn(dbKind, info, dbTable.getTableName());
+            dbTable.setTabsColumn(tabsColumn);
+        }
+        return tableMessage;
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author yuntian 317526763@qq.com
@@ -18,8 +19,8 @@ public class DatabaseExportApplication {
 		SpringApplication.run(DatabaseExportApplication.class, args);
 	}
 
-	@GetMapping("/")
+	@RequestMapping("/")
 	String hello(){
-		return "redirect:web/index.html";
+		return "web/index.html";
 	}
 }

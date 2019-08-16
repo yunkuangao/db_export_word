@@ -20,10 +20,9 @@
                 console.log(data);
                 $("#select_ido_optional option").remove();
                 for (var key in data) {
-                    $("#o_optional").append("<option value='" + key + "' selected>" + data[key] + "</option>");
-                    $("#m_optional").append("<option value='" + key + "' selected>" + data[key] + "</option>");
-                    $("#s_optional").append("<option value='" + key + "' selected>" + data[key] + "</option>");
+                    $("select[id*='optional']").append("<option value='" + key + "' selected>" + data[key] + "</option>");
                 }
+                $("select[id*='table']").selectpicker('refresh');
             }, error: function (data) {
                 $('#messageText').text("未知错误");
             }
@@ -45,13 +44,12 @@
                 },
                 success: function (data) {
                     console.log(data);
+                    var $table = $("#"+db+"_table");
                     $("#"+db+"_table option").remove();
                     for (var key in data) {
-                        $("#"+db+"_table").append("<option value='" + key + "' selected>" + data[key] + "</option>");
+                        $table.append("<option value='" + key + "' selected>" + data[key] + "</option>");
                     }
-                    $("#"+db+"_table").selectpicker('render');
-                    $("#"+db+"_table").selectpicker('refresh');
-                    $("#"+db+"_table").selectpicker();
+                    $table.selectpicker('refresh');
                 }, error: function (data) {
                     $('#messageText').text("未知错误");
                 }
@@ -206,7 +204,7 @@
                             <!-- 多选框参考链接 -->
                             <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
                             <label for="m_optional">optional</label>
-                            <select class="selectpicker form-control" id="m_optional" multiple>
+                            <select class="selectpicker form-control" id="m_optional" data-selected-text-format="count > 5" multiple>
                                 <option></option>
                             </select>
                         </div>
@@ -218,7 +216,8 @@
                                 <option></option>
                             </select>
                         </div>
-                        <p><a class="btn btn-primary btn-lg" href="javascript:excute('mysql');" role="button">生成文档</a>
+                        <p>
+                            <a class="btn btn-primary btn-lg" href="javascript:excute('mysql');" role="button">生成文档</a>
                         </p>
                         <p style="color: red">生成的文档在D盘下的export.docx</p>
                     </form>
@@ -264,7 +263,7 @@
                             <!-- 多选框参考链接 -->
                             <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
                             <label for="s_optional">optional</label>
-                            <select class="selectpicker form-control" id="s_optional" multiple>
+                            <select class="selectpicker form-control" id="s_optional" data-selected-text-format="count > 5" multiple>
                                 <option></option>
                             </select>
                         </div>
