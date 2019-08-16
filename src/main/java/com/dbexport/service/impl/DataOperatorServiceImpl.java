@@ -76,4 +76,10 @@ public class DataOperatorServiceImpl implements IDataOperatorService {
         }
         return tableMessage;
     }
+
+    @Override
+    public List<DbTable> getTabsAllColumn(String dbKind, DbBaseInfo info) throws Exception {
+        List<DbTable> tableMessage = getTableName(dbKind, info);
+        return getTabsAllColumn(tableMessage, dbKind, info);
+    }
 }

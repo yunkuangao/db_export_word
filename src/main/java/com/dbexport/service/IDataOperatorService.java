@@ -35,6 +35,15 @@ public interface IDataOperatorService {
     List<Map> getTabsColumn(String dbKind, DbBaseInfo info, String tableName) throws Exception;
 
     /**
+     * @Author yuntian 317526763@qq.com
+     * @Description //TODO
+     * @Date 13:12 2019/8/16
+     * @Param [dbKind, info]
+     * @return java.util.List<com.dbexport.domain.DbTable>
+     **/
+    List<DbTable> getTabsAllColumn(String dbKind, DbBaseInfo info) throws Exception;
+    
+    /**
      * 获取列
      *
      * @param dbKind    1

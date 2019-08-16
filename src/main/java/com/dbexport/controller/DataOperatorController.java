@@ -31,11 +31,10 @@ public class DataOperatorController {
 
     @PostMapping(value = "/makeWord")
     @ResponseBody
-    public ResponseMessage getData(String dbKind, DbBaseInfo info, HttpServletResponse response) {
+    public ResponseMessage getData(String dbKind, DbBaseInfo info) {
         ResponseMessage responseMessage = new ResponseMessage();
         try {
-            List<DbTable> tableMessage = dataOperatorService.getTableName(dbKind, info);
-            tableMessage = dataOperatorService.getTabsAllColumn(tableMessage, dbKind, info);
+            List<DbTable> tableMessage = dataOperatorService.getTabsAllColumn(dbKind, info);
             poitlOperatorService.makeDoc(tableMessage, info);
             responseMessage.setMessage("生成文档成功!!!");
         } catch (Exception e) {
