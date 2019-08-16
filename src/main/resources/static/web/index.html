@@ -33,7 +33,7 @@
                 dataType: "json",
                 type: "post",
                 data: {
-                    dbKind: $("#database").selectpicker('val'),
+                    dbKind: $("#database").val(),
                     ip: $("#ip").val(),
                     port: $("#port").val(),
                     dbName: $("#dbName").val(),
@@ -54,7 +54,7 @@
         });
 
         $("#database").change(function () {
-           var db = $(this).selectpicker('val');
+           var db = $(this).val();
            $("#ip,#port,#dbName,#userName,#password").val("");
            $("#table").html("").selectpicker('refresh').selectpicker('render');
            var ip,port,dbName,userName;
@@ -78,7 +78,7 @@
             url: "/makeWord",
             type: "post",
             data: {
-                dbKind: $("#database").selectpicker('val'),
+                dbKind: $("#database").val(),
                 ip: $("#ip").val(),
                 port: $("#port").val(),
                 dbName: $("#dbName").val(),
@@ -153,12 +153,11 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <!-- 多选框参考链接 -->
-                            <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
                             <label for="table">table</label>
                             <select class="selectpicker form-control" id="table" data-selected-text-format="count > 5"
-                                    multiple data-live-search="true">
-                                <option></option>
+                                    multiple data-live-search="true"
+                                    title="Choose options of all"
+                                    data-actions-box="true">
                             </select>
                         </div>
                         <p><a class="btn btn-primary btn-lg" href="javascript:excute();"
