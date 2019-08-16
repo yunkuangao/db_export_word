@@ -72,16 +72,23 @@ public class DbExportConstants {
         String sql = null;
         switch (dbKind.toUpperCase()) {
             case "MYSQL":
-                sql = "select table_name TABLE_NAME, table_comment COMMENTS from information_schema.tables where table_schema='" + dbName + "' and table_type='base table'";
+                sql = "    SELECT table_name TABLE_NAME, table_comment COMMENTS" +
+                        "    FROM information_schema.tables" +
+                        "    WHERE table_schema = '" + dbName + "'" +
+                        "      AND table_type = 'base table'";
                 break;
             case "ORACLE":
-                sql = "select t1.TABLE_NAME," +
-                        "t2.COMMENTS " +
-                        "from user_tables t1 ,user_tab_comments t2 " +
-                        "where t1.table_name = t2.table_name(+)";
+                sql = " select t1.TABLE_NAME," +
+                        " t2.COMMENTS " +
+                        " from user_tables t1 ,user_tab_comments t2 " +
+                        " where t1.table_name = t2.table_name(+)";
                 break;
             case "SQLSERVER":
-                sql = "select TABLE_NAME=d.name,COMMENTS=f.value  from sysobjects d left join sys.extended_properties f on d.id=f.major_id and f.minor_id=0 where d.xtype = 'u' and d.name != 'sysdiagrams'";
+                sql = "    SELECT TABLE_NAME = d.name, COMMENTS = f.value" +
+                        "    FROM sysobjects d" +
+                        "             LEFT JOIN sys.extended_properties f ON d.id = f.major_id AND f.minor_id = 0" +
+                        "    WHERE d.xtype = 'u'" +
+                        "      AND d.name != 'sysdiagrams'";
                 break;
             default:
         }
@@ -99,7 +106,18 @@ public class DbExportConstants {
         String sql = null;
         switch (dbKind.toUpperCase()) {
             case "MYSQL":
-                sql = "select c.column_name COLUMN_NAME,c.data_type DATA_TYPE,c.character_maximum_length DATA_LENGTH,CASE WHEN c.is_nullable = 'NO' THEN 'N' ELSE '' END AS NULLABLE,c.column_default DATA_DEFAULT,c.column_comment COMMENTS,CASE WHEN p.column_Name IS NULL THEN '' ELSE 'Y' END AS PK from information_schema.COLUMNS c LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS p ON c.table_schema = p.table_schema AND c.table_name = p.TABLE_NAME AND c.COLUMN_NAME = p.COLUMN_NAME AND p.constraint_name = 'PRIMARY' where c.table_name = '" + tableName + "' and c.table_schema = (select database())order by c.ordinal_position";
+                sql = " SELECT c.column_name                                           COLUMN_NAME," +
+                        "       c.data_type                                             DATA_TYPE," +
+                        "       c.character_maximum_length                              DATA_LENGTH," +
+                        "       CASE WHEN c.is_nullable = 'NO' THEN 'N' ELSE '' END  AS NULLABLE," +
+                        "       c.column_default                                        DATA_DEFAULT," +
+                        "       c.column_comment                                        COMMENTS," +
+                        "       CASE WHEN p.column_Name IS NULL THEN '' ELSE 'Y' END AS PK" +
+                        " FROM information_schema.COLUMNS c" +
+                        "         LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS p" +
+                        " ON C.table_schema = p.table_schema AND C.table_name = p.TABLE_NAME AND C.COLUMN_NAME = p.COLUMN_NAME AND p.constraint_name = 'PRIMARY'" +
+                        " WHERE C.table_name = '" + tableName + "' AND C.table_schema = (SELECT DATABASE ())" +
+                        " ORDER BY C.ordinal_position";
                 break;
             case "ORACLE":
                 sql = "SELECT utc.column_name COLUMN_NAME" +
@@ -121,7 +139,21 @@ public class DbExportConstants {
                         "       ORDER BY column_id";
                 break;
             case "SQLSERVER":
-                sql = "select cast(a.name as varchar(100)) as COLUMN_NAME,cast(b.name as varchar(100)) as DATA_TYPE,cast(columnproperty(a.id, a.name, 'PRECISION') as varchar(100)) as DATA_LENGTH,cast(case when a.isnullable = 1 then '' else 'N' end as varchar(100)) as NULLABLE,cast(isnull(e.text, '') as varchar(100)) as DATA_DEFAULT,cast(isnull(g.[value], '') as varchar(100)) as COMMENTS,cast(case when t4.id is null then '' else 'Y' end as varchar(100)) as PK from sys.syscolumns a left join sys.SYSINDEXKEYS t4 on a.colid = t4.colid and t4.id = a.id left join sys.systypes b on a.xusertype = b.xusertype inner join sys.sysobjects d on a.id = d.id and d.xtype = 'U' and d.name <> 'dtproperties' left join sys.syscomments e on a.cdefault = e.id left join sys.extended_properties g on a.id = g.major_id and a.colid = g.minor_id left join sys.extended_properties f on d.id = f.major_id and f.minor_id = 0 where d.name = '" + tableName + "'";
+                sql = "    SELECT cast(a.name AS varchar(100))                                          AS COLUMN_NAME," +
+                        "           cast(b.name AS varchar(100))                                          AS DATA_TYPE," +
+                        "           cast(columnproperty(a.id, a.name, 'PRECISION') AS varchar(100))       AS DATA_LENGTH," +
+                        "           cast(CASE WHEN a.isnullable = 1 THEN '' ELSE 'N' END AS varchar(100)) AS NULLABLE," +
+                        "           cast(isnull(e.text, '') AS varchar(100))                              AS DATA_DEFAULT," +
+                        "           cast(isnull(g.[VALUE], '') AS varchar(100))                           AS COMMENTS," +
+                        "           cast(CASE WHEN t4.id IS NULL THEN '' ELSE 'Y' END AS varchar(100))    AS PK" +
+                        "    FROM sys.syscolumns a" +
+                        "             LEFT JOIN sys.SYSINDEXKEYS t4 ON a.colid = t4.colid AND t4.id = a.id" +
+                        "             LEFT JOIN sys.systypes b ON a.xusertype = b.xusertype" +
+                        "             INNER JOIN sys.sysobjects d ON a.id = d.id AND d.xtype = 'U' AND d.name <> 'dtproperties'" +
+                        "             LEFT JOIN sys.syscomments e ON a.cdefault = e.id" +
+                        "             LEFT JOIN sys.extended_properties g ON a.id = g.major_id AND a.colid = g.minor_id" +
+                        "             LEFT JOIN sys.extended_properties f ON d.id = f.major_id AND f.minor_id = 0" +
+                        "    WHERE d.name = '" + tableName + "'";
                 break;
             default:
         }

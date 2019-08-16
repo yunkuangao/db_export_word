@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
     <title>数据库表结构导出生成WORD文档</title>
@@ -11,93 +11,86 @@
     <script src="../bootstrap/js/bootstrao-select.js"></script>
 </head>
 <script type="text/javascript">
-    $(function(){
+    $(function () {
         $.ajax({
             url: "/getOptional",
             dataType: "json",
-            type: "get",
             success: function (data) {
-                console.log(data);
-                $("#select_ido_optional option").remove();
+                var $table = $("#table");
                 for (var key in data) {
-                    $("select[id*='optional']").append("<option value='" + key + "' selected>" + data[key] + "</option>");
+                    if(data.hasOwnProperty(key)){
+                        $("#optional").append("<option value='" + key + "' selected>" + data[key] + "</option>");
+                    }
                 }
-                $("select[id*='table']").selectpicker('refresh');
-            }, error: function (data) {
-                $('#messageText').text("未知错误");
+                $table.selectpicker('refresh');
+                $table.selectpicker('render');
             }
         });
 
         $("input").change(function () {
-            var db = $(this).attr("id").substring(0,1);
             $.ajax({
                 url: "/getTable",
                 dataType: "json",
                 type: "post",
                 data: {
-                    dbKind: transTo(db),
-                    ip: $("#"+db+"_ip").val(),
-                    port: $("#"+db+"_port").val(),
-                    dbName: $("#"+db+"_dbName").val(),
-                    userName: $("#"+db+"_userName").val(),
-                    password: $("#"+db+"_password").val()
+                    dbKind: $("#database").selectpicker('val'),
+                    ip: $("#ip").val(),
+                    port: $("#port").val(),
+                    dbName: $("#dbName").val(),
+                    userName: $("#userName").val(),
+                    password: $("#password").val()
                 },
                 success: function (data) {
-                    console.log(data);
-                    var $table = $("#"+db+"_table");
-                    $("#"+db+"_table option").remove();
+                    var $table = $("#table");
                     for (var key in data) {
-                        $table.append("<option value='" + key + "' selected>" + data[key] + "</option>");
+                        if(data.hasOwnProperty(key)){
+                            $table.append("<option value='" + key + "' selected>" + data[key] + "</option>");
+                        }
                     }
                     $table.selectpicker('refresh');
-                }, error: function (data) {
-                    $('#messageText').text("未知错误");
+                    $table.selectpicker('render');
                 }
             });
         });
+
+        $("#database").change(function () {
+           var db = $(this).selectpicker('val');
+           $("#ip,#port,#dbName,#userName,#password").val("");
+           $("#table").html("").selectpicker('refresh').selectpicker('render');
+           var ip,port,dbName,userName;
+           switch (db) {
+               case 'oracle': ip="127.0.0.1";port="1521";dbName="orcl";userName="orcl";break;
+               case 'mysql':ip="127.0.0.1";port="3306";dbName="test";userName="root";break;
+               case 'sqlserver':ip="127.0.0.1";port="1433";dbName="";userName="sa";break;
+               default:ip="127.0.0.1";port="";dbName="";userName="";
+           }
+            $("#ip").val(ip);
+            $("#port").val(port);
+            $("#dbName").val(dbName);
+            $("#userName").val(userName);
+        });
     });
 
-    function trans(dbKind){
-        var db;
-        switch(dbKind){
-            case "mysql":db = "m";break;
-            case "oracle": db = "o";break;
-            case "sqlserver": db = "s";
-        }
-        return db;
-    }
-
-    function transTo(db){
-        var dbKind;
-        switch(db){
-            case "m":dbKind = "mysql";break;
-            case "o": dbKind = "oracle";break;
-            case "s": dbKind = "sqlserver";
-        }
-        return dbKind;
-    }
-
-    function excute(dbKind) {
+    function excute() {
         $('#messageText').text("正在努力生成中......");
         $('#myModal').modal('show');
-        var db = trans(dbKind);
         $.ajax({
             url: "/makeWord",
             type: "post",
             data: {
-                dbKind: dbKind,
-                ip: $("#"+db+"_ip").val(),
-                port: $("#"+db+"_port").val(),
-                dbName: $("#"+db+"_dbName").val(),
-                userName: $("#"+db+"_userName").val(),
-                password: $("#"+db+"_password").val(),
-                optional: $("#"+db+"_optional").val().toString(),
-                table: $("#"+db+"_table").val().toString()
+                dbKind: $("#database").selectpicker('val'),
+                ip: $("#ip").val(),
+                port: $("#port").val(),
+                dbName: $("#dbName").val(),
+                userName: $("#userName").val(),
+                password: $("#password").val(),
+                optional: $("#optional").val().toString(),
+                table: $("#table").val().toString()
             },
             success: function (data) {
                 $('#messageText').text(data.message);
             }, error: function (data) {
-                $('#messageText').text("未知错误");
+                $('#messageText').text("未知错误"+data.message);
             }
         });
     }
@@ -110,175 +103,69 @@
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
                        aria-expanded="true" aria-controls="collapseOne">
-                        ORACLE
+                        database
                     </a>
                 </h4>
             </div>
             <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                 <div class="panel-body">
                     <form style="margin-top: 20px;margin-left: 100px;margin-right: 400px;">
-                        <label><h1>oracle info</h1></label>
+                        <div class="form-group">
+                            <label for="database">database</label>
+                            <select class="selectpicker form-control" id="database"
+                                    data-live-search="true" title="Choose one of all">
+                                <option value="oracle" selected>oracle</option>
+                                <option value="mysql">mysql</option>
+                                <option value="sqlserver">sqlserver</option>
+                            </select>
+                        </div>
                         <div class="form-inline">
                             <div class="form-group">
-                                <label class="sr-only" for="o_ip">ip</label>
-                                <input type="text" class="form-control" id="o_ip" placeholder="127.0.0.1">
+                                <label class="sr-only" for="ip">ip</label>
+                                <input type="text" class="form-control" id="ip" placeholder="127.0.0.1">
                             </div>
                             <div class="form-group">
-                                <label class="sr-only" for="o_port">port</label>
-                                <input type="text" class="form-control" id="o_port" placeholder="" value="1521">
+                                <label class="sr-only" for="port">port</label>
+                                <input type="text" class="form-control" id="port" placeholder="" value="1521">
                             </div>
                             <div class="form-group">
-                                <label class="sr-only" for="o_dbName">dbName</label>
-                                <input type="text" class="form-control" id="o_dbName" placeholder="" value="orcl">
+                                <label class="sr-only" for="dbName">dbName</label>
+                                <input type="text" class="form-control" id="dbName" placeholder="" value="orcl">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="o_userName">userName</label>
-                            <input type="text" class="form-control" id="o_userName" placeholder="userName">
+                            <label for="userName">userName</label>
+                            <input type="text" class="form-control" id="userName" placeholder="userName">
                         </div>
                         <div class="form-group">
-                            <label for="o_password">password</label>
-                            <input type="text" class="form-control" id="o_password" placeholder="password">
+                            <label for="password">password</label>
+                            <input type="text" class="form-control" id="password" placeholder="password">
                         </div>
                         <div class="form-group">
                             <!-- 多选框参考链接 -->
                             <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
-                            <label for="o_optional">optional</label>
-                            <select class="selectpicker form-control" id="o_optional" data-selected-text-format="count > 5" multiple>
-                                <option></option>
+                            <label for="optional">optional</label>
+                            <select class="selectpicker form-control" id="optional"
+                                    data-selected-text-format="count > 5"
+                                    multiple data-live-search="true"
+                                    title="Choose options of all"
+                                    data-actions-box="true">
                             </select>
                         </div>
                         <div class="form-group">
                             <!-- 多选框参考链接 -->
                             <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
-                            <label for="o_table">table</label>
-                            <select class="selectpicker form-control" id="o_table" data-selected-text-format="count > 5" multiple>
+                            <label for="table">table</label>
+                            <select class="selectpicker form-control" id="table" data-selected-text-format="count > 5"
+                                    multiple data-live-search="true">
                                 <option></option>
                             </select>
                         </div>
-                        <p><a class="btn btn-primary btn-lg" href="javascript:excute('oracle');"
+                        <p><a class="btn btn-primary btn-lg" href="javascript:excute();"
                               role="button">生成文档</a></p>
                         <p style="color: red">生成的文档在D盘下的export.docx</p>
                     </form>
 
-                </div>
-            </div>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingTwo">
-                <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-                       href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        MYSQL
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                <div class="panel-body">
-                    <form style="margin-top: 20px;margin-left: 100px;margin-right: 400px;">
-                        <label><h1>mysql info</h1></label>
-                        <div class="form-inline">
-                            <div class="form-group">
-                                <label class="sr-only" for="m_ip">ip</label>
-                                <input type="text" class="form-control" id="m_ip" placeholder="127.0.0.1">
-                            </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="m_port">port</label>
-                                <input type="text" class="form-control" id="m_port" placeholder="3306" value="3306">
-                            </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="m_dbName">dbName</label>
-                                <input type="text" class="form-control" id="m_dbName" placeholder="数据库名">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="m_userName">userName</label>
-                            <input type="text" class="form-control" id="m_userName" placeholder="userName">
-                        </div>
-                        <div class="form-group">
-                            <label for="m_password">password</label>
-                            <input type="text" class="form-control" id="m_password" placeholder="password">
-                        </div>
-                        <div class="form-group">
-                            <!-- 多选框参考链接 -->
-                            <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
-                            <label for="m_optional">optional</label>
-                            <select class="selectpicker form-control" id="m_optional" data-selected-text-format="count > 5" multiple>
-                                <option></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <!-- 多选框参考链接 -->
-                            <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
-                            <label for="m_table">table</label>
-                            <select class="selectpicker form-control" id="m_table" data-selected-text-format="count > 5" multiple>
-                                <option></option>
-                            </select>
-                        </div>
-                        <p>
-                            <a class="btn btn-primary btn-lg" href="javascript:excute('mysql');" role="button">生成文档</a>
-                        </p>
-                        <p style="color: red">生成的文档在D盘下的export.docx</p>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingThree">
-                <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-                       href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        SQL SERVER
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                <div class="panel-body">
-                    <form style="margin-top: 20px;margin-left: 100px;margin-right: 400px;">
-                        <label><h1>sql server info</h1></label>
-                        <div class="form-inline">
-                            <div class="form-group">
-                                <label class="sr-only" for="s_ip">ip</label>
-                                <input type="text" class="form-control" id="s_ip" placeholder="127.0.0.1">
-                            </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="s_port">port</label>
-                                <input type="text" class="form-control" id="s_port" placeholder="1433" value="1433">
-                            </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="s_dbName">dbName</label>
-                                <input type="text" class="form-control" id="s_dbName" placeholder="数据库名">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="s_userName">userName</label>
-                            <input type="text" class="form-control" id="s_userName" placeholder="userName">
-                        </div>
-                        <div class="form-group">
-                            <label for="s_password">password</label>
-                            <input type="text" class="form-control" id="s_password" placeholder="password">
-                        </div>
-                        <div class="form-group">
-                            <!-- 多选框参考链接 -->
-                            <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
-                            <label for="s_optional">optional</label>
-                            <select class="selectpicker form-control" id="s_optional" data-selected-text-format="count > 5" multiple>
-                                <option></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <!-- 多选框参考链接 -->
-                            <!-- https://blog.csdn.net/zxl_LangYa/article/details/79247307 -->
-                            <label for="s_table">table</label>
-                            <select class="selectpicker form-control" id="s_table" data-selected-text-format="count > 5" multiple>
-                                <option></option>
-                            </select>
-                        </div>
-                        <p><a class="btn btn-primary btn-lg" href="javascript:excute('sqlserver');" role="button">生成文档</a>
-                        </p>
-                        <p style="color: red">生成的文档在D盘下的export.docx</p>
-                    </form>
                 </div>
             </div>
         </div>
