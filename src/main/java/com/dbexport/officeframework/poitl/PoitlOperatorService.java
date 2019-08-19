@@ -1,23 +1,25 @@
 package com.dbexport.officeframework.poitl;
 
+import com.dbexport.domain.*;
+import com.dbexport.utils.StringUtils;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
-import com.dbexport.domain.*;
-import com.dbexport.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
 import java.io.FileOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
- * 类说明:POI-TL操作服务
- *
+ * POI-TL操作服务
  * @author yuntian 317526763@qq.com
  * @date 2018/10/29/0029.
  */
@@ -34,10 +36,11 @@ public class PoitlOperatorService {
 
     /**
      * 生成word
-     *
-     * @param tableMessage 表格内容
-     * @throws Exception 异常
-     */
+     * @param tableMessage 表内容
+     * @param info         参数
+     * @author yuntian 317526763@qq.com
+     * @date 2019/8/19 09:42
+     **/
     public void makeDoc(List<DbTable> tableMessage, DbBaseInfo info) throws Exception {
         List<String> key = info.getOptional();
         List<TempData> tempDataList = new ArrayList<>();
@@ -50,7 +53,7 @@ public class PoitlOperatorService {
             List<RowRenderData> rowRenderDataList = new ArrayList<>();
             for (Map map : data) {
                 List<String> currentList = new ArrayList<>(16);
-                for(String str : key){
+                for (String str : key) {
                     currentList.add(StringUtils.getValue(map.get(str)));
                 }
                 RowRenderData labor = RowRenderData.build(currentList.toArray(new String[0]));
@@ -62,7 +65,7 @@ public class PoitlOperatorService {
         }
         Map<String, Object> tempMap = new HashMap<>();
         List<SegmentData> segmentDataList = new ArrayList<>();
-        Map<String,String> map = env.getMap();
+        Map<String, String> map = env.getMap();
         for (TempData tempData : tempDataList) {
             RowRenderData header = RowRenderData.build(key.stream().map(map::get).toArray(String[]::new));
             SegmentData segmentData = new SegmentData();

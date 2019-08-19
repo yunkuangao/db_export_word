@@ -18,7 +18,7 @@
             success: function (data) {
                 var $table = $("#table");
                 for (var key in data) {
-                    if(data.hasOwnProperty(key)){
+                    if (data.hasOwnProperty(key)) {
                         $("#optional").append("<option value='" + key + "' selected>" + data[key] + "</option>");
                     }
                 }
@@ -43,7 +43,7 @@
                 success: function (data) {
                     var $table = $("#table");
                     for (var key in data) {
-                        if(data.hasOwnProperty(key)){
+                        if (data.hasOwnProperty(key)) {
                             $table.append("<option value='" + key + "' selected>" + data[key] + "</option>");
                         }
                     }
@@ -54,16 +54,35 @@
         });
 
         $("#database").change(function () {
-           var db = $(this).val();
-           $("#ip,#port,#dbName,#userName,#password").val("");
-           $("#table").html("").selectpicker('refresh').selectpicker('render');
-           var ip,port,dbName,userName;
-           switch (db) {
-               case 'oracle': ip="127.0.0.1";port="1521";dbName="orcl";userName="orcl";break;
-               case 'mysql':ip="127.0.0.1";port="3306";dbName="test";userName="root";break;
-               case 'sqlserver':ip="127.0.0.1";port="1433";dbName="";userName="sa";break;
-               default:ip="127.0.0.1";port="";dbName="";userName="";
-           }
+            var db = $(this).val();
+            $("#ip,#port,#dbName,#userName,#password").val("");
+            $("#table").html("").selectpicker('refresh').selectpicker('render');
+            var ip, port, dbName, userName;
+            switch (db) {
+                case 'oracle':
+                    ip = "127.0.0.1";
+                    port = "1521";
+                    dbName = "orcl";
+                    userName = "orcl";
+                    break;
+                case 'mysql':
+                    ip = "127.0.0.1";
+                    port = "3306";
+                    dbName = "test";
+                    userName = "root";
+                    break;
+                case 'sqlserver':
+                    ip = "127.0.0.1";
+                    port = "1433";
+                    dbName = "";
+                    userName = "sa";
+                    break;
+                default:
+                    ip = "127.0.0.1";
+                    port = "";
+                    dbName = "";
+                    userName = "";
+            }
             $("#ip").val(ip);
             $("#port").val(port);
             $("#dbName").val(dbName);
@@ -90,7 +109,7 @@
             success: function (data) {
                 $('#messageText').text(data.message);
             }, error: function (data) {
-                $('#messageText').text("未知错误"+data.message);
+                $('#messageText').text("未知错误" + data.message);
             }
         });
     }

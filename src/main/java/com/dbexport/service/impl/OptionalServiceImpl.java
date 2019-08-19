@@ -32,7 +32,7 @@ public class OptionalServiceImpl implements IOptionalService {
 
     @Override
     public List<String> getFiled() {
-        Set<String> key =  getOptional().keySet();
+        Set<String> key = getOptional().keySet();
         return new ArrayList<>(key);
     }
 }

@@ -1,42 +1,19 @@
 package com.dbexport.domain;
 
 import com.deepoove.poi.data.RowRenderData;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * 类说明:Temp缓冲数据
- *
  * @author yuntian 317526763@qq.com
  * @date 2018/10/29/0029.
  */
+@Data
 public class TempData implements Serializable {
     private String tableName;
     private String tableComment;
     private List<RowRenderData> data;
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getTableComment() {
-        return tableComment;
-    }
-
-    public void setTableComment(String tableComment) {
-        this.tableComment = tableComment;
-    }
-
-    public List<RowRenderData> getData() {
-        return data;
-    }
-
-    public void setData(List<RowRenderData> data) {
-        this.data = data;
-    }
 }

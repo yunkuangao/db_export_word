@@ -1,22 +1,19 @@
 package com.dbexport.constant;
 
 /**
- * 类说明:常用字段
- *
+ * 得到数据库链接属性
+ * @author yuntian 317526763@qq.com
  * @date 2018/10/29/0029.
- * @updator yuntian 317526763@qq.com
  */
-
 public class DbExportConstants {
 
     /**
      * 得到连接地址
-     *
-     * @param dbKind 1
-     * @param ip     1
-     * @param port   1
-     * @param dbName 1
-     * @return 1
+     * @param dbKind 数据库类型
+     * @param ip     ip
+     * @param port   端口
+     * @param dbName 数据库名
+     * @return 返回相应的数据库链接
      */
     public static String getJdbcUrl(String dbKind, String ip, String port, String dbName) {
         String url = null;
@@ -40,9 +37,8 @@ public class DbExportConstants {
 
     /**
      * 得到驱动名称
-     *
-     * @param dbKind 1
-     * @return 1
+     * @param dbKind 数据库类型
+     * @return 返回相应的驱动名称
      */
     public static String getDriverClassName(String dbKind) {
         String driverClassName = null;
@@ -62,11 +58,10 @@ public class DbExportConstants {
     }
 
     /**
-     * 获取得到所有表和表注释的SQL语句
-     *
-     * @param dbKind               1
-     * @param dbName--mysql需要数据库名称
-     * @return 1
+     * 获取得到所有表和表注释的sql语句
+     * @param dbKind 数据库类型
+     * @param dbName 数据库名称
+     * @return 返回数据库用户名下的所有表名
      */
     public static String getTableNameSQL(String dbKind, String dbName) {
         String sql = null;
@@ -96,11 +91,10 @@ public class DbExportConstants {
     }
 
     /**
-     * 得到SQL
-     *
-     * @param dbKind    1
-     * @param tableName 1
-     * @return 1
+     * 得到查询表字段和参数的sql
+     * @param dbKind    数据库类型
+     * @param tableName 表名
+     * @return 返回对应的表字段和参数
      */
     public static String getColNameInfoSQL(String dbKind, String tableName) {
         String sql = null;
@@ -159,6 +153,4 @@ public class DbExportConstants {
         }
         return sql;
     }
-
-
 }

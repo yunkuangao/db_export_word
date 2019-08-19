@@ -5,18 +5,19 @@ import com.dbexport.domain.DbBaseInfo;
 import com.dbexport.domain.DbTable;
 import com.dbexport.service.IDataOperatorService;
 import com.dbexport.utils.DbConnection;
-import com.dbexport.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * 类说明:数据操作类
- *
  * @author yuntian 317526763@qq.com
  * @date 2018/10/29/0029.
  */
@@ -54,7 +55,7 @@ public class DataOperatorServiceImpl implements IDataOperatorService {
 
         while (resultSet.next()) {
             Map<String, String> colDataMap = new HashMap<>(16);
-            for(String str : key){
+            for (String str : key) {
                 colDataMap.put(str, resultSet.getString(str));
             }
             list.add(colDataMap);
