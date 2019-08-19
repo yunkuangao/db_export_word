@@ -61,7 +61,6 @@ public class PoitlOperatorService {
             }
             tempData.setData(rowRenderDataList);
             tempDataList.add(tempData);
-
         }
         Map<String, Object> tempMap = new HashMap<>();
         List<SegmentData> segmentDataList = new ArrayList<>();
