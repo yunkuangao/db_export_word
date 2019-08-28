@@ -7,10 +7,16 @@ import com.dbexport.officeframework.poitl.PoitlOperatorService;
 import com.dbexport.service.IDataOperatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,7 +45,7 @@ public class DataOperatorController {
      **/
     @PostMapping(value = "/makeWord")
     @ResponseBody
-    public ResponseMessage getData(String dbKind, DbBaseInfo info) {
+    public ResponseEntity<FileSystemResource> getData(String dbKind, DbBaseInfo info) {
         ResponseMessage responseMessage = new ResponseMessage();
         try {
             List<DbTable> tableMessage = dataOperatorService.getTabsAllColumn(dbKind, info);
@@ -49,6 +55,21 @@ public class DataOperatorController {
             e.printStackTrace();
             responseMessage.setMessage("诶，遇到错误了," + e.getMessage());
         }
-        return responseMessage;
+
+        //return responseMessage;
+        File file = new File(filePath);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Content-Disposition", "attachment; filename=" + System.currentTimeMillis() + ".docx");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        headers.add("Last-Modified", new Date().toString());
+        headers.add("ETag", String.valueOf(System.currentTimeMillis()));
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new FileSystemResource(file));
     }
 }

@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../bootstrap/css/bootstrap-select.css">
     <script src="../js/jquery-3.3.1.js"></script>
+    <script src="../js/jquery-ajax-native.js"></script>
+
     <script src="../bootstrap/js/bootstrap.min.js"></script>
     <script src="../bootstrap/js/bootstrao-select.js"></script>
 </head>
@@ -33,7 +35,7 @@
                 dataType: "json",
                 type: "post",
                 data: {
-                    dbKind: $("#database").val(),
+                    dbKind: $("#dbKind").val(),
                     ip: $("#ip").val(),
                     port: $("#port").val(),
                     dbName: $("#dbName").val(),
@@ -53,7 +55,7 @@
             });
         });
 
-        $("#database").change(function () {
+        $("#dbKind").change(function () {
             var db = $(this).val();
             $("#ip,#port,#dbName,#userName,#password").val("");
             $("#table").html("").selectpicker('refresh').selectpicker('render');
@@ -96,8 +98,12 @@
         $.ajax({
             url: "/makeWord",
             type: "post",
+            dataType: 'native',
+            xhrFields: {
+                responseType: 'blob'
+            },
             data: {
-                dbKind: $("#database").val(),
+                dbKind: $("#dbKind").val(),
                 ip: $("#ip").val(),
                 port: $("#port").val(),
                 dbName: $("#dbName").val(),
@@ -106,8 +112,12 @@
                 optional: $("#optional").val().toString(),
                 table: $("#table").val().toString()
             },
-            success: function (data) {
-                $('#messageText').text(data.message);
+            success: function (blob) {
+                $('#messageText').text(blob.size > 0 ? "success" : "error");
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "export.docx";
+                link.click();
             }, error: function (data) {
                 $('#messageText').text("未知错误" + data.message);
             }
@@ -128,10 +138,11 @@
             </div>
             <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                 <div class="panel-body">
-                    <form style="margin-top: 20px;margin-left: 100px;margin-right: 400px;">
+                    <form style="margin-top: 20px;margin-left: 100px;margin-right: 400px;" action="/makeWord"
+                          method="post">
                         <div class="form-group">
-                            <label for="database">database</label>
-                            <select class="selectpicker form-control" id="database"
+                            <label for="dbKind">database</label>
+                            <select class="selectpicker form-control" id="dbKind"
                                     data-live-search="true" title="Choose one of all">
                                 <option value="oracle" selected>oracle</option>
                                 <option value="mysql">mysql</option>
@@ -181,6 +192,7 @@
                         </div>
                         <p><a class="btn btn-primary btn-lg" href="javascript:excute();"
                               role="button">生成文档</a></p>
+                        <!--                        <input class="btn btn-primary btn-lg" type="submit" value="生成文档" />-->
                         <p style="color: red">生成的文档在D盘下的export.docx</p>
                     </form>
 
