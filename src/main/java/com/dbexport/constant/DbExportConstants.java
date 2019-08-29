@@ -114,23 +114,27 @@ public class DbExportConstants {
                         " ORDER BY C.ordinal_position";
                 break;
             case "ORACLE":
-                sql = "SELECT utc.column_name COLUMN_NAME" +
-                        "   ,utc.data_type DATA_TYPE" +
-                        "   ,utc.data_length DATA_LENGTH" +
-                        "   ,DECODE(utc.nullable, 'N', 'N', '') NULLABLE" +
-                        "   ,utc.data_default DATA_DEFAULT" +
-                        "   ,ucc.comments COMMENTS" +
-                        "   ,CASE WHEN (SELECT LISTAGG(col.column_name, ',') WITHIN GROUP (ORDER BY col.column_name)" +
-                        " FROM user_constraints con,user_cons_columns col " +
-                        " WHERE con.constraint_name = col.constraint_name " +
-                        "   AND con.constraint_type = 'P' " +
-                        "   AND col.table_name = '" + tableName + "') LIKE '%' || UTC.COLUMN_NAME || '%' " +
-                        "       THEN 'Y' ELSE '' END AS PK " +
-                        "       FROM user_tab_columns utc,user_col_comments ucc " +
-                        "       WHERE utc.table_name = ucc.table_name " +
-                        "           AND utc.column_name = ucc.column_name " +
-                        "           AND utc.table_name = '" + tableName + "' " +
-                        "       ORDER BY column_id";
+                sql = " SELECT utc.column_name                     COLUMN_NAME" +
+                        "     , utc.data_type                       DATA_TYPE" +
+                        "     , utc.data_length                     DATA_LENGTH" +
+                        "     , CASE" +
+                        "           WHEN (SELECT LISTAGG(col.column_name, ',') WITHIN GROUP (ORDER BY col.column_name)" +
+                        "                 FROM user_constraints con," +
+                        "                      user_cons_columns col" +
+                        "                 WHERE con.constraint_name = col.constraint_name" +
+                        "                   AND con.constraint_type = 'P'" +
+                        "                   AND col.table_name = '" + tableName + "') LIKE '%' || UTC.COLUMN_NAME || '%'" +
+                        "               THEN '主键'" +
+                        "           ELSE '' END AS                  PK" +
+                        "     , DECODE(utc.nullable, 'N', '必填', '') NULLABLE" +
+                        "     , utc.data_default                    DATA_DEFAULT" +
+                        "     , ucc.comments                        COMMENTS" +
+                        " FROM user_tab_columns utc," +
+                        "     user_col_comments ucc" +
+                        " WHERE utc.table_name = ucc.table_name" +
+                        "  AND utc.column_name = ucc.column_name" +
+                        "  AND utc.table_name = '" + tableName + "'" +
+                        " ORDER BY column_id";
                 break;
             case "SQLSERVER":
                 sql = "    SELECT cast(a.name AS varchar(100))                                          AS COLUMN_NAME," +
