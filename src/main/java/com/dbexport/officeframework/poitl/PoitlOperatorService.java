@@ -6,6 +6,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
+import com.deepoove.poi.data.TextRenderData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,10 @@ public class PoitlOperatorService {
      **/
     public void makeDoc(List<DbTable> tableMessage, DbBaseInfo info) throws Exception {
         List<String> key = info.getOptional();
+        List<TextRenderData> headerData = new ArrayList<>();
+        for (String str : key) {
+            headerData.add(new TextRenderData(str));
+        }
         List<TempData> tempDataList = new ArrayList<>();
         for (DbTable dbTable : tableMessage) {
             List<Map> data = dbTable.getTabsColumn();
@@ -52,11 +57,19 @@ public class PoitlOperatorService {
 
             List<RowRenderData> rowRenderDataList = new ArrayList<>();
             for (Map map : data) {
-                List<String> currentList = new ArrayList<>(16);
+                List<TextRenderData> currentList = new ArrayList<>();
+
                 for (String str : key) {
-                    currentList.add(StringUtils.getValue(map.get(str)));
+                    TextRenderData current = new TextRenderData();
+                    current.setText(StringUtils.getValue(map.get(str)));
+                    currentList.add(current);
                 }
-                RowRenderData labor = RowRenderData.build(currentList.toArray(new String[0]));
+                RowRenderData labor = null;
+                if (currentList.stream().noneMatch(lt -> "主键".equals(lt.getText()))) {
+                    labor = RowRenderData.build(currentList.toArray(new TextRenderData[0]));
+                } else {
+                    labor = new RowRenderData(currentList, "FFDEAD");
+                }
                 rowRenderDataList.add(labor);
             }
             tempData.setData(rowRenderDataList);
@@ -64,9 +77,8 @@ public class PoitlOperatorService {
         }
         Map<String, Object> tempMap = new HashMap<>();
         List<SegmentData> segmentDataList = new ArrayList<>();
-        Map<String, String> map = env.getMap();
         for (TempData tempData : tempDataList) {
-            RowRenderData header = RowRenderData.build(key.stream().map(map::get).toArray(String[]::new));
+            RowRenderData header = new RowRenderData(headerData, "A9A9A9");
             SegmentData segmentData = new SegmentData();
             segmentData.setTable(new MiniTableRenderData(header, tempData.getData()));
             segmentData.setTableName(tempData.getTableName());
@@ -77,7 +89,6 @@ public class PoitlOperatorService {
         /*1.根据模板生成文档*/
         XWPFTemplate template = XWPFTemplate.compile(ResourceUtils.getFile(importWord)).render(tempMap);
         /*2.生成文档*/
-
         FileOutputStream out = new FileOutputStream(exportWord);
         template.write(out);
         out.flush();
