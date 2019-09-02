@@ -118,12 +118,12 @@ public class DbExportConstants {
                         "     , utc.data_type                       DATA_TYPE" +
                         "     , utc.data_length                     DATA_LENGTH" +
                         "     , CASE" +
-                        "           WHEN (SELECT LISTAGG(col.column_name, ',') WITHIN GROUP (ORDER BY col.column_name)" +
+                        "           WHEN UTC.COLUMN_NAME in (SELECT col.column_name " +
                         "                 FROM user_constraints con," +
                         "                      user_cons_columns col" +
                         "                 WHERE con.constraint_name = col.constraint_name" +
                         "                   AND con.constraint_type = 'P'" +
-                        "                   AND col.table_name = '" + tableName + "') LIKE '%' || UTC.COLUMN_NAME || '%'" +
+                        "                   AND col.table_name = '" + tableName + "') " +
                         "               THEN '主键'" +
                         "           ELSE '' END AS                  PK" +
                         "     , DECODE(utc.nullable, 'N', '必填', '') NULLABLE" +
