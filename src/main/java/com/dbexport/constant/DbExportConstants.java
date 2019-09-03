@@ -115,8 +115,7 @@ public class DbExportConstants {
                 break;
             case "ORACLE":
                 sql = " SELECT utc.column_name                     COLUMN_NAME" +
-                        "     , utc.data_type                       DATA_TYPE" +
-                        "     , utc.data_length                     DATA_LENGTH" +
+                        "     , utc.data_type ||  '(' || utc.data_length  || ')'                        DATA_TYPE" +
                         "     , CASE" +
                         "           WHEN UTC.COLUMN_NAME in (SELECT col.column_name " +
                         "                 FROM user_constraints con," +
