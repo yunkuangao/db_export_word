@@ -165,11 +165,16 @@
                                 <resource>
                                     <directory>${basedir}/src/main/resources</directory>
                                     <filtering>true</filtering>
+                                    <!--                                    <includes>-->
+                                    <!--                                        <include>application.yml</include>-->
+                                    <!--                                        <include>import.docx</include>-->
+                                    <!--                                        <include>sub_model.docx</include>-->
+                                    <!--                                    </includes>-->
                                     <includes>
-                                        <include>application.yml</include>
-                                        <include>import.docx</include>
-                                        <include>sub_model.docx</include>
+                                        <include>**/*.*</include>
                                     </includes>
+                                    <!--是否替换资源中的属性-->
+                                    <filtering>false</filtering>
                                 </resource>
                             </resources>
                         </configuration>

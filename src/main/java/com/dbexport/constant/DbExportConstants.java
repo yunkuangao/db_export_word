@@ -101,8 +101,7 @@ public class DbExportConstants {
         switch (dbKind.toUpperCase()) {
             case "MYSQL":
                 sql = " SELECT c.column_name                                           COLUMN_NAME," +
-                        "       c.data_type                                             DATA_TYPE," +
-                        "       c.character_maximum_length                              DATA_LENGTH," +
+                        "       concat(c.data_type,'(',c.character_maximum_length ,')')     DATA_TYPE," +
                         "       CASE WHEN c.is_nullable = 'NO' THEN 'N' ELSE '' END  AS NULLABLE," +
                         "       c.column_default                                        DATA_DEFAULT," +
                         "       c.column_comment                                        COMMENTS," +
@@ -137,8 +136,7 @@ public class DbExportConstants {
                 break;
             case "SQLSERVER":
                 sql = "    SELECT cast(a.name AS varchar(100))                                          AS COLUMN_NAME," +
-                        "           cast(b.name AS varchar(100))                                          AS DATA_TYPE," +
-                        "           cast(columnproperty(a.id, a.name, 'PRECISION') AS varchar(100))       AS DATA_LENGTH," +
+                        "           cast(b.name AS varchar(100))  +'('  +   cast(columnproperty(a.id, a.name, 'PRECISION') AS varchar(100))  AS DATA_TYPE," +
                         "           cast(CASE WHEN a.isnullable = 1 THEN '' ELSE 'N' END AS varchar(100)) AS NULLABLE," +
                         "           cast(isnull(e.text, '') AS varchar(100))                              AS DATA_DEFAULT," +
                         "           cast(isnull(g.[VALUE], '') AS varchar(100))                           AS COMMENTS," +
