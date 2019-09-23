@@ -4,13 +4,12 @@ server:
     context-path: /
 spring:
   application:
-    name: db-export
+    name:
 
 word:
   model:
-    export: D:\\export.docx
-    import: D:\\import.docx
-    sub-model: D:\\sub_model.docx
+    import: classpath:docx/import.docx
+    sub-model: classpath:docx/sub_model.docx
 
 # 配置打印参数
 optional:

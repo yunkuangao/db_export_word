@@ -2,7 +2,9 @@ package com.dbexport;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -12,10 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @EnableConfigurationProperties
 @SpringBootApplication
 @Controller
-public class DatabaseExportApplication {
+public class DatabaseExportApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(DatabaseExportApplication.class, args);
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(this.getClass());
     }
 
     /**

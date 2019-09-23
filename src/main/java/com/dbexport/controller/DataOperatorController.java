@@ -6,7 +6,6 @@ import com.dbexport.domain.ResponseMessage;
 import com.dbexport.officeframework.poitl.PoitlOperatorService;
 import com.dbexport.service.IDataOperatorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 进行文档生成的对外接口
@@ -31,8 +31,6 @@ public class DataOperatorController {
     private IDataOperatorService dataOperatorService;
     @Autowired
     private PoitlOperatorService poitlOperatorService;
-    @Value("${word.model.export}")
-    private String filePath;
 
 
     /**
@@ -47,20 +45,19 @@ public class DataOperatorController {
     @ResponseBody
     public ResponseEntity<FileSystemResource> getData(String dbKind, DbBaseInfo info) {
         ResponseMessage responseMessage = new ResponseMessage();
+        File exportFile = null;
         try {
             List<DbTable> tableMessage = dataOperatorService.getTabsAllColumn(dbKind, info);
-            poitlOperatorService.makeDoc(tableMessage, info);
+            exportFile = poitlOperatorService.makeDoc(tableMessage, info);
             responseMessage.setMessage("生成文档成功!!!");
         } catch (Exception e) {
             e.printStackTrace();
             responseMessage.setMessage("诶，遇到错误了," + e.getMessage());
         }
 
-        //return responseMessage;
-        File file = new File(filePath);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Content-Disposition", "attachment; filename=" + System.currentTimeMillis() + ".docx");
+        headers.add("Content-Disposition", "attachment; filename=" + Objects.requireNonNull(exportFile).getName());
         headers.add("Pragma", "no-cache");
         headers.add("Expires", "0");
         headers.add("Last-Modified", new Date().toString());
@@ -68,8 +65,8 @@ public class DataOperatorController {
         return ResponseEntity
                 .ok()
                 .headers(headers)
-                .contentLength(file.length())
+                .contentLength(exportFile.length())
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(new FileSystemResource(file));
+                .body(new FileSystemResource(exportFile));
     }
 }
