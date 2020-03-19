@@ -114,7 +114,22 @@ public class DbExportConstants {
                 break;
             case "ORACLE":
                 sql = " SELECT utc.column_name                     COLUMN_NAME" +
-                        "     , utc.data_type ||  '(' || utc.data_length  || ')'                        DATA_TYPE" +
+                        "     , CASE" +
+                        "           WHEN utc.data_type = 'DATE'" +
+                        "               THEN utc.data_type" +
+                        "           WHEN utc.data_type = 'CLOB'" +
+                        "               THEN utc.data_type" +
+                        "           WHEN utc.data_type = 'BLOB'" +
+                        "               THEN utc.data_type" +
+                        "           WHEN utc.data_type = 'NUMBER'" +
+                        "               THEN CASE" +
+                        "                        WHEN utc.DATA_PRECISION IS NOT NULL AND utc.DATA_SCALE IS NOT NULL AND utc.DATA_SCALE != 0" +
+                        "                            THEN utc.data_type || '(' || utc.DATA_PRECISION || ',' || utc.DATA_SCALE || ')'" +
+                        "                        WHEN utc.DATA_PRECISION IS NOT NULL" +
+                        "                            THEN utc.data_type || '(' || utc.DATA_PRECISION || ')'" +
+                        "                        ELSE utc.data_type END" +
+                        "           ELSE utc.data_type || '(' || utc.data_length || ')'" +
+                        "    END                AS                  DATA_TYPE" +
                         "     , CASE" +
                         "           WHEN UTC.COLUMN_NAME in (SELECT col.column_name " +
                         "                 FROM user_constraints con," +
