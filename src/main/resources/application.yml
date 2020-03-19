@@ -10,6 +10,7 @@ word:
   model:
     import: classpath:docx/import.docx
     sub-model: classpath:docx/sub_model.docx
+    export: D:\export.docx
 
 # 配置打印参数
 optional:

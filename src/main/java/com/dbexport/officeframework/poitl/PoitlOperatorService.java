@@ -34,6 +34,8 @@ public class PoitlOperatorService {
     public String importWord;
     @Value("${word.model.sub-model}")
     public String subModelWord;
+    @Value("${word.model.export}")
+    public String exportWord;
 
     /**
      * 生成word
@@ -89,7 +91,7 @@ public class PoitlOperatorService {
         /*1.根据模板生成文档*/
         XWPFTemplate template = XWPFTemplate.compile(ResourceUtils.getFile(importWord)).render(tempMap);
         /*2.生成文档*/
-        File exportFile = new File("export.docx");
+        File exportFile = new File(exportWord);
         OutputStream os = new FileOutputStream(exportFile);
         template.write(os);
         os.flush();
