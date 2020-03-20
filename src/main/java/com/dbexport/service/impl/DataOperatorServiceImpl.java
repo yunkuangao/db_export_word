@@ -30,7 +30,7 @@ public class DataOperatorServiceImpl implements IDataOperatorService {
         List<DbTable> tableList = new ArrayList<>();
         Connection connection = DbConnection.getConn(DbExportConstants.getJdbcUrl(dbKind, info.getIp(), info.getPort(), info.getDbName()), info.getUserName(), info.getPassword(), DbExportConstants.getDriverClassName(dbKind));
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(DbExportConstants.getTableNameSQL(dbKind, info.getDbName()));
+        ResultSet resultSet = statement.executeQuery(DbExportConstants.getTableName(dbKind, info.getDbName()));
         while (resultSet.next()) {
             DbTable dbTable = new DbTable();
             String tableName = resultSet.getString("TABLE_NAME");
@@ -50,7 +50,7 @@ public class DataOperatorServiceImpl implements IDataOperatorService {
         Connection connection = DbConnection.getConn(DbExportConstants.getJdbcUrl(dbKind, info.getIp(), info.getPort(), info.getDbName()), info.getUserName(), info.getPassword(), DbExportConstants.getDriverClassName(dbKind));
 
         Statement statement = connection.createStatement();
-        String sql = DbExportConstants.getColNameInfoSQL(dbKind, tableName);
+        String sql = DbExportConstants.getColNameInfo(dbKind, tableName);
         ResultSet resultSet = statement.executeQuery(sql);
 
         while (resultSet.next()) {

@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
- * @ClassName OptionalServiceImpl
- * @Description TODO
+ *
  * @Author yuntian 317526763@qq.com
  * @Date 2019/8/13 09:54
  * @Version 1.0
@@ -23,9 +22,9 @@ public class OptionalServiceImpl implements IOptionalService {
     public Map<String, Object> getOptional() {
         Map<String, Object> map = new LinkedHashMap<>();
         List<String> param = Arrays.asList(env.getParam().split(","));
-        List<String> param_cn = Arrays.asList(env.getParam_cn().split(","));
+        List<String> paramCn = Arrays.asList(env.getParamCn().split(","));
         for (int i = 0; i < param.size(); i++) {
-            map.put(param.get(i), param_cn.get(i));
+            map.put(param.get(i), paramCn.get(i));
         }
         return map;
     }

@@ -15,4 +15,4 @@ word:
 # 配置打印参数
 optional:
   param: COLUMN_NAME,DATA_TYPE,PK,NULLABLE,DATA_DEFAULT,COMMENTS
-  param_cn: 列名,数据类型,主键,可空,默认值,注释
+  paramCn: 列名,数据类型,主键,可空,默认值,注释

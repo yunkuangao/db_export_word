@@ -18,6 +18,7 @@ public interface IDataOperatorService {
      * @param dbKind 数据库类型
      * @param info   参数
      * @return 返回表名
+     * @throws Exception 异常
      */
     List<DbTable> getTableName(String dbKind, DbBaseInfo info) throws Exception;
 
@@ -27,6 +28,7 @@ public interface IDataOperatorService {
      * @param tableName 表名
      * @param info      参数
      * @return 返回表的列
+     * @throws Exception 异常
      */
     List<Map> getTabsColumn(String dbKind, DbBaseInfo info, String tableName) throws Exception;
 
@@ -35,6 +37,7 @@ public interface IDataOperatorService {
      * @param dbKind 数据库类型
      * @param info   参数
      * @return 返回所有列
+     * @throws Exception 异常
      * @author yuntian 317526763@qq.com
      * @date 2019/8/19 09:44
      **/
@@ -46,6 +49,7 @@ public interface IDataOperatorService {
      * @param dbKind       数据库类型
      * @param info         参数
      * @return 返回所有列
+     * @throws Exception 异常
      * @author yuntian 317526763@qq.com
      * @date 2019/8/19 09:45
      **/

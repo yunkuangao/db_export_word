@@ -19,11 +19,6 @@ public class DatabaseExportApplication extends SpringBootServletInitializer {
         SpringApplication.run(DatabaseExportApplication.class, args);
     }
 
-//    @Override
-//    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-//        return builder.sources(this.getClass());
-//    }
-
     /**
      * 给出一个默认页面
      * @return resource/static下的路径

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @date 2019年8月19日 09点22分
  **/
 @RestController
-public class DBInfoController {
+public class DataBaseInfoController {
 
     @Autowired
     private IDataOperatorService dataOperatorService;
@@ -46,7 +46,7 @@ public class DBInfoController {
     @PostMapping("/getTable")
     public @ResponseBody
     String getTable(String dbKind, DbBaseInfo info) throws Exception {
-        if (isNullOrEmpty.test(info.getDBInfo()) || isNullOrEmpty.test(Collections.singletonList(dbKind))) {
+        if (isNullOrEmpty.test(info.getDateBaseInfo()) || isNullOrEmpty.test(Collections.singletonList(dbKind))) {
             return "";
         }
         Map<String, Object> map = dataOperatorService.getTableName(dbKind, info)

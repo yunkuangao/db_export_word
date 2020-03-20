@@ -63,7 +63,7 @@ public class DbExportConstants {
      * @param dbName 数据库名称
      * @return 返回数据库用户名下的所有表名
      */
-    public static String getTableNameSQL(String dbKind, String dbName) {
+    public static String getTableName(String dbKind, String dbName) {
         String sql = null;
         switch (dbKind.toUpperCase()) {
             case "MYSQL":
@@ -96,7 +96,7 @@ public class DbExportConstants {
      * @param tableName 表名
      * @return 返回对应的表字段和参数
      */
-    public static String getColNameInfoSQL(String dbKind, String tableName) {
+    public static String getColNameInfo(String dbKind, String tableName) {
         String sql = null;
         switch (dbKind.toUpperCase()) {
             case "MYSQL":

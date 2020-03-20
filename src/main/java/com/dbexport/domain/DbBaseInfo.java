@@ -38,7 +38,7 @@ public class DbBaseInfo implements Serializable {
      * @author yuntian 317526763@qq.com
      * @date 2019/8/19 09:26
      **/
-    public List<String> getDBInfo() {
+    public List<String> getDateBaseInfo() {
         return Arrays.asList(port, dbName, userName, password);
     }
 }

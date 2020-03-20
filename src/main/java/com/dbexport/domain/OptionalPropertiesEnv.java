@@ -26,7 +26,7 @@ public class OptionalPropertiesEnv {
     /**
      * 列名（中文显示）
      */
-    private String param_cn;
+    private String paramCn;
     /**
      * 列名map
      */
@@ -44,9 +44,9 @@ public class OptionalPropertiesEnv {
         }
         if (map.size() == 0) {
             String[] pa = param.split(",");
-            String[] pa_cn = param_cn.split(",");
+            String[] paCn = paramCn.split(",");
             for (int i = 0, j = pa.length; i < j; ++i) {
-                map.put(pa[i], pa_cn[i]);
+                map.put(pa[i], paCn[i]);
             }
         }
         return map;
